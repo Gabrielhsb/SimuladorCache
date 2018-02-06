@@ -67,6 +67,16 @@ public:
 	static Cache duplicateCache(Cache c);
 	
 };
+class Processor{
+private:
+	int ncores;
+public:
+	Memory* coreMemory;
+	Processor();
+	static Processor createProcessor(Memory mem, int ncores);
+
+};
+
 /* ====================================================
    ==================FUNCOES TACACHE===================
    ====================================================
@@ -172,6 +182,7 @@ bool setTACacheData(TACache* tac, int address, int value){
     }
     return hit;
 }
+
 
 /* ====================================================
    ==================FUNCOES SACACHE===================
@@ -432,6 +443,24 @@ Cache Cache::duplicateCache(Cache c) {
     return Cache::createCache(*l1d,*l1i,*l2,l3);
 }
 
+/* ====================================================
+   ==================FUNCOES PROCESSOR===================
+   ====================================================
+*/
+
+Processor Processor::createProcessor(Memory mem, int ncores) {
+	Processor *p = new Processor();
+	p->coreMemory = new Memory[ncores];
+	p->coreMemory[0] = mem;
+	for (int i = 1; i < ncores; ++i) {
+		p->coreMemory[i] = Memory::duplicateMemory(mem);
+	}
+	p->ncores = ncores;
+	return *p;
+}
+
+Memory::Memory(){
+}
 
  /* Arquivo baseado no trabalho de um grupo da turma. Obrigado ao grupo.
  
